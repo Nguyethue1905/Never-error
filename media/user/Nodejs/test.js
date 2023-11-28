@@ -24,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/upload', upload.array('images', 5), async (req, res) => {
     try {
+        const userName = req.body.userName;
         const imagesData = req.files.map(file => file.buffer.toString('base64'));
 
         // Insert data into MySQL
@@ -32,13 +33,13 @@ app.post('/upload', upload.array('images', 5), async (req, res) => {
 
         try {
             // Insert user data
-            const [userResult] = await connection.execute('INSERT INTO image (filename) VALUES (?)', [imagesData]);
+            const [userResult] = await connection.execute('INSERT INTO users (user_name) VALUES (?)', [userName]);
             const userId = userResult.insertId;
 
             // Insert image data
-            // for (const imageData of imagesData) {
-            //     await connection.execute('INSERT INTO posts (user_id, image_data) VALUES (?, ?)', [userId, imageData]);
-            // }
+            for (const imageData of imagesData) {
+                await connection.execute('INSERT INTO images (user_id, image_data) VALUES (?, ?)', [userId, imageData]);
+            }
 
             // Commit the transaction
             await connection.commit();
