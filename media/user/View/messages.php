@@ -1,5 +1,4 @@
 
-
     <!-- <ul id="chatList"></ul>
     <input type="text" id="messageInput" placeholder="Type your message...">
     <button onclick="sendMessage()">Send</button> -->
